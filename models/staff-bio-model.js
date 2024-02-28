@@ -5,7 +5,7 @@ const StaffBio = new Schema(
   {
     name: { type: String, required: true },
     title: { type: String, required: true },
-    image: { data: Buffer, contentType: String, required: false },
+    image: { data: Buffer, contentType: String },
     fave: { type: String, required: false }
   },
   { timestamps: true }

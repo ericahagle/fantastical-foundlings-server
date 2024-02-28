@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 mongoose
-  .connect('mongodb://127.0.0.1:27017/staff', { useNewUrlParser: true })
+  .connect('mongodb://127.0.0.1:27017/staff')
   .catch(error => {
     console.error('Connection error', error.message);
   });
