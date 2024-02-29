@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 const db = require('./db');
+const staffBioRouter = require('./routes/staff-bio-router');
 
 const app = express();
 const PORT = 8080;
@@ -16,6 +17,8 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 app.get('/', (req, res) => {
   res.send('Test');
 });
+
+app.use('/api', staffBioRouter);
 
 app.listen(PORT, () => {
   console.log(`Listening on PORT ${PORT}`);
