@@ -1,6 +1,4 @@
 const StaffBio = require('../models/staff-bio-model');
-const multer = require('multer');
-const { fileUpload } = require('../middleware/file-upload');
 
 createStaffBio = async (req, res) => {
   const body = req.body;
@@ -39,11 +37,16 @@ createStaffBio = async (req, res) => {
 }
 
 updateStaffBio = async (req, res) => {
+  const body = req.body;
+
+  if (!body) {
+    return res.status(400).json({
+      success: false,
+      error: 'You must provide something in the request body to update'
+    });
+  }
+
   try {
-
-    console.log('Received request:', req.body);
-    console.log('Full request object:', req);
-
     const staffBio = await StaffBio.findOne({ _id: req.params.id });
 
     if (!staffBio) {
@@ -51,60 +54,26 @@ updateStaffBio = async (req, res) => {
         message: 'Staff bio not found!'
       });
     }
+    staffBio.name = body.name
+    staffBio.title = body.title
+    staffBio.image = body.image
+    staffBio.fave = body.fave
 
-    fileUpload.single('image')(req, res, async (err) => {
-      if (err instanceof multer.MulterError) {
+    await staffBio.save();
 
-        console.error('Multer Error:', err);
-
-        return res.status(400).json({
-          error: err.message,
-          message: 'File upload error!'
-        });
-      } else if (err) {
-
-        console.error('Internal Server Error:', err);
-
-        return res.status(500).json({
-          error: err.message,
-          message: 'Internal server error!'
-        });
-      }
-
-      
-      console.log('Received request body:', req.body);
-      console.log('Received file:', req.file);
-
-      console.log('Staff Bio before update:', staffBio);
-
-      staffBio.name = req.body.name;
-      staffBio.title = req.body.title;
-      staffBio.fave = req.body.fave;
-
-      if (req.file) {
-        staffBio.image = req.file.path;
-        console.log('File uploaded:', req.file);
-      }
-
-      console.log('Staff Bio after update:', staffBio);
-
-      await staffBio.save();
-
-      return res.status(200).json({
-        success: true,
-        id: staffBio._id,
-        message: 'Staff bio updated!'
-      });
-    });
+    return res.status(200).json({
+      success: true,
+      id: staffBio._id,
+      message: 'Staff bio updated!'
+    })
   }
   catch (error) {
-    console.error(error);
     return res.status(500).json({
       error,
       message: 'Staff bio not updated!'
-    });
+    })
   }
-};
+}
 
 getStaffBios = async (req, res) => {
   try {
