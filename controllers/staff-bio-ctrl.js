@@ -75,6 +75,20 @@ updateStaffBio = async (req, res) => {
   }
 }
 
+deleteStaffBio = async (req, res) => {
+  try {
+    const staffBio = await StaffBio.findOneAndDelete({ _id: req.params.id });
+
+    if (!staffBio) {
+      return res.status(404).json({ success: false, error: `Staff Bio not found` });
+    }
+
+    return res.status(200).json({ success: true, data: staffBio })
+  } catch (err) {
+    return res.status(400).json({ success: false, error: err.message });
+  }
+}
+
 getStaffBios = async (req, res) => {
   try {
     const staff = await StaffBio.find({});
@@ -93,5 +107,6 @@ getStaffBios = async (req, res) => {
 module.exports = {
   createStaffBio,
   updateStaffBio,
+  deleteStaffBio,
   getStaffBios
 }
