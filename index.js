@@ -23,3 +23,5 @@ app.use('/api', staffBioRouter);
 app.listen(PORT, () => {
   console.log(`Listening on PORT ${PORT}`);
 });
+
+module.exports = app;
